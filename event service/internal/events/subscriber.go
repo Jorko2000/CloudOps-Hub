@@ -1,7 +1,7 @@
 package events
 
 import (
-	"log"
+	"event-service/internal/processor"
 
 	"github.com/nats-io/nats.go"
 )
@@ -20,9 +20,8 @@ func StartSubscriber() error {
 		"deployment.created",
 		func(msg *nats.Msg) {
 
-			log.Printf(
-				"Deployment Event: %s",
-				string(msg.Data),
+			processor.ProcessDeployment(
+				msg.Data,
 			)
 		},
 	)

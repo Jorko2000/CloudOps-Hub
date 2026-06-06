@@ -14,12 +14,42 @@ services:
     ports:
       - "5432:5432"
 
+  nats:
+
+    image: nats:latest
+
+    ports:
+      - "4222:4222"
+
   auth-service:
 
-    build: .
+    build:
+      context: ./auth-service
 
     ports:
       - "8080:8080"
 
     depends_on:
       - postgres
+
+  deployment-service:
+
+    build:
+      context: ./deployment-service
+
+    ports:
+      - "8081:8081"
+
+    depends_on:
+      - postgres
+
+  event-service:
+
+    build:
+      context: ./event-service
+
+    ports:
+      - "50051:50051"
+
+    depends_on:
+      - nats

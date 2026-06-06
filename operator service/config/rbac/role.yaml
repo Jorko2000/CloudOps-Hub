@@ -1,0 +1,38 @@
+apiVersion: rbac.authorization.k8s.io/v1
+
+kind: ClusterRole
+
+metadata:
+  name: cloudops-operator
+
+rules:
+
+  - apiGroups: [""]
+
+    resources:
+      - services
+
+      - pods
+
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+
+  - apiGroups: ["apps"]
+
+    resources:
+      - deployments
+
+    verbs:
+      - "*"
+
+  - apiGroups: ["cloudops.io"]
+
+    resources:
+      - applications
+
+    verbs:
+      - "*"

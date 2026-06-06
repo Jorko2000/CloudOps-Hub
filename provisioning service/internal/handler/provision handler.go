@@ -31,7 +31,11 @@ func (h *ProvisionHandler) Provision(
 		return
 	}
 
-	err := h.Service.Provision()
+	err := h.Service.Provision(
+	req.Namespace,
+	req.Postgres,
+	req.Redis,
+)
 
 	if err != nil {
 

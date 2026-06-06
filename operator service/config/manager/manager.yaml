@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: operator-service
+
+spec:
+
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: operator-service
+
+  template:
+
+    metadata:
+      labels:
+        app: operator-service
+
+    spec:
+
+      serviceAccountName: operator-service
+
+      containers:
+
+        - name: operator
+
+          image: cloudops/operator-service:latest

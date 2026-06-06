@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package deployment;
+
+option go_package = "./proto";
+
+service DeploymentService {
+
+  rpc DeployApplication
+  (
+      DeploymentRequest
+  )
+  returns
+  (
+      DeploymentResponse
+  );
+}
+
+message DeploymentRequest {
+
+  string appName = 1;
+
+  string image = 2;
+
+  int32 replicas = 3;
+}
+
+message DeploymentResponse {
+
+  string status = 1;
+
+  string message = 2;
+}

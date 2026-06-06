@@ -1,0 +1,17 @@
+groups:
+
+- name: cloudops-alerts
+
+  rules:
+
+  - alert: HighDeploymentRate
+
+    expr: rate(cloudops_deployments_total[5m]) > 50
+
+    for: 2m
+
+    labels:
+      severity: warning
+
+    annotations:
+      summary: High deployment activity

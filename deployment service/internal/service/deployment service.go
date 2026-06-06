@@ -1,12 +1,14 @@
 package service
 
 import (
+	"deployment-service/internal/events"
 	"deployment-service/internal/model"
 	"deployment-service/internal/repository"
 )
 
 type DeploymentService struct {
-	Repo repository.DeploymentRepository
+	Repo      repository.DeploymentRepository
+	Publisher *events.Publisher
 }
 
 func (s *DeploymentService) Deploy(
@@ -15,14 +17,32 @@ func (s *DeploymentService) Deploy(
 	replicas int32,
 ) error {
 
+	// Create deployment record
 	record := &model.Deployment{
-		AppName: appName,
-		Image: image,
+		AppName:  appName,
+		Image:    image,
 		Replicas: replicas,
-		Status: "DEPLOYED",
+		Status:   "DEPLOYED",
 	}
 
-	return s.Repo.Save(
-		record,
+	// Save deployment in PostgreSQL
+	if err := s.Repo.Save(record); err != nil {
+		return err
+	}
+
+	// Publish deployment event to NATS
+	err := s.Publisher.Publish(
+		events.DeploymentEvent{
+			AppName:  appName,
+			Image:    image,
+			Replicas: replicas,
+			Status:   "DEPLOYED",
+		},
 	)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
